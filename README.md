@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Trade Skills Day
+
+Lead-generation and booking-request website for 1–2 day trade taster workshops (tiling, plastering, plumbing) in Andover & Marlborough, UK.
+
+## Stack
+
+- **Next.js 14** (App Router, TypeScript, Server Components)
+- **Tailwind CSS** + **shadcn/ui** (New York style, Slate base)
+- **Zod** for form validation
+- **Inter** (body) + **Space Grotesk** (headings) via `next/font`
+- **pnpm** package manager
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Routes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Route | Purpose |
+|-------|---------|
+| `/` | Home — hero, featured courses, locations, top FAQs |
+| `/courses` | Course list with trade/duration/location filters |
+| `/courses/[slug]` | Course detail (statically generated) |
+| `/locations` | Andover & Marlborough venue info |
+| `/about` | Company story, mission, values |
+| `/book` | Booking request form (server action) |
+| `/faq` | FAQ accordion with JSON-LD FAQPage schema |
+| `/instructors` | Instructor interest form |
+| `/legal` | Terms, privacy, safeguarding (anchor sections) |
+| `/contact` | Contact info & locations |
 
-## Learn More
+## Editing Courses
 
-To learn more about Next.js, take a look at the following resources:
+All courses are defined in `lib/courses.ts`. Each course has:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `slug` — URL-safe identifier
+- `title`, `summary`, `description` — display text
+- `trade` — `"tiling"`, `"plastering"`, or `"plumbing"`
+- `duration` — `"1 day"` or `"2 days"`
+- `locations` — array of `"andover"` and/or `"marlborough"`
+- `price` — number in GBP
+- `whatYouLearn`, `includes` — bullet point arrays
+- `suitableFor` — target audience text
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Add or edit courses in this file. Course detail pages are statically generated at build time.
 
-## Deploy on Vercel
+## Form Behaviour
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Forms submit via **Next.js Server Actions** and write to JSON files in `/data/`:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `/data/bookings.json` — booking requests
+- `/data/instructor-interest.json` — instructor interest submissions
+
+The `/data/` directory is gitignored. In production, replace the JSON file storage with a database and/or email notification (see TODO comments in `lib/actions.ts`).
+
+## Site Configuration
+
+All site metadata, nav links, footer links, locations and pilot banner settings are in `config/site.ts`.
+
+## SEO
+
+- `generateMetadata` on every page (title, description, OG, Twitter cards)
+- JSON-LD schemas: Organization (global), LocalBusiness (home/locations), Course (per course), FAQPage (/faq)
+- `sitemap.xml` and `robots.txt` generated automatically
+- Semantic HTML, skip-to-content link, `lang="en"`
+
+## Pilot Banner
+
+The sitewide "Pilot Launch" banner is controlled by `siteConfig.pilotBanner.enabled` in `config/site.ts`. Set to `false` to hide it.
+
+## Build & Deploy
+
+```bash
+pnpm build    # Production build
+pnpm start    # Start production server
+```
+
+Vercel-ready — deploy directly from your Git repository.
+
+## TODO
+
+- [ ] Replace JSON file storage with database (Postgres/Supabase)
+- [ ] Add email notifications on form submission
+- [ ] Add real venue images (WebP, optimised)
+- [ ] Payment integration (Stripe)
+- [ ] Calendar/date picker for booking
+- [ ] Instructor profiles page
+- [ ] Blog/news section
+- [ ] Analytics (Plausible/Fathom)
