@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
 import { Section } from "@/components/Section";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -66,12 +67,12 @@ export default function ContactPage() {
               <p className="text-sm text-muted-foreground leading-relaxed">
                 We aim to respond to all enquiries within 2 working days. For
                 booking requests, please use our{" "}
-                <a
+                <Link
                   href="/book"
                   className="text-orange-600 underline underline-offset-2 hover:text-orange-700"
                 >
                   booking form
-                </a>
+                </Link>
                 .
               </p>
             </div>

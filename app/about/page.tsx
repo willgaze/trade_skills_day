@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
 import { Section } from "@/components/Section";
 import { Separator } from "@/components/ui/separator";
@@ -106,12 +107,12 @@ export default function AboutPage() {
               experience. They know what it takes to succeed in the industry and
               are passionate about sharing their skills. We are currently
               expanding our team —{" "}
-              <a
+              <Link
                 href="/instructors"
                 className="text-orange-600 underline underline-offset-2 hover:text-orange-700"
               >
                 get in touch
-              </a>{" "}
+              </Link>{" "}
               if you are a qualified tradesperson interested in teaching.
             </p>
           </div>
