@@ -3,6 +3,7 @@
 import { readFile, writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { bookingSchema, instructorSchema } from "@/lib/schemas";
+import { sendBookingEmails, sendInstructorEmails } from "@/lib/email";
 
 export type FormState = {
   success: boolean;
@@ -58,8 +59,11 @@ export async function submitBooking(
   }
 
   try {
-    // TODO: Replace with database insert and/or email notification
+    // Save to local JSON (data backup) and send email notifications
     await appendToJsonFile("bookings.json", result.data as unknown as Record<string, unknown>);
+    sendBookingEmails(result.data).catch((err) =>
+      console.error("[email] Unhandled error in sendBookingEmails:", err)
+    );
     return {
       success: true,
       message:
@@ -95,8 +99,11 @@ export async function submitInstructorInterest(
   }
 
   try {
-    // TODO: Replace with database insert and/or email notification
+    // Save to local JSON (data backup) and send email notifications
     await appendToJsonFile("instructor-interest.json", result.data as unknown as Record<string, unknown>);
+    sendInstructorEmails(result.data).catch((err) =>
+      console.error("[email] Unhandled error in sendInstructorEmails:", err)
+    );
     return {
       success: true,
       message:
